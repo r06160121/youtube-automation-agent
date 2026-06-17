@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { serveStatic } from 'hono/node'
+import { serveStatic } from 'hono/bun'
 import customRoutes from './custom-routes'
 import { createServer } from 'http'
 
