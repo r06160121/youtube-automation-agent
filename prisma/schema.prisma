@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("users")
+}
+
+model YouTubeChannel {
+  id              String   @id @default(cuid())
+  channelName     String
+  channelId       String?  @unique
+  niche           String
+  postingFrequency String  @default("daily")
+  targetAudience  String?
+  aiProvider      String   @default("openai")
+  apiKey          String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  videos          Video[]
+  analytics       Analytics[]
+  strategies      ContentStrategy[]
+  @@map("youtube_channels")
+}
+
+model Video {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  tags            String?
+  thumbnailUrl    String?
+  videoUrl        String?
+  status          String   @default("idea")
+  scheduledAt     DateTime?
+  publishedAt     DateTime?
+  views           Int      @default(0)
+  likes           Int      @default(0)
+  comments        Int      @default(0)
+  revenue         Float    @default(0)
+  ctr             Float    @default(0)
+  watchTime       Float    @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  channel         YouTubeChannel @relation(fields: [channelId], references: [id])
+  channelId       String
+  @@map("videos")
+}
+
+model Analytics {
+  id              String   @id @default(cuid())
+  date            DateTime @default(now())
+  totalViews      Int      @default(0)
+  totalSubscribers Int     @default(0)
+  totalRevenue    Float    @default(0)
+  averageCTR      Float    @default(0)
+  averageWatchTime Float   @default(0)
+  topVideos       String?
+  createdAt       DateTime @default(now())
+  channel         YouTubeChannel @relation(fields: [channelId], references: [id])
+  channelId       String
+  @@map("analytics")
+}
+
+model ContentStrategy {
+  id              String   @id @default(cuid())
+  topic           String
+  style           String   @default("educational")
+  targetLength    String   @default("10-15 minutes")
+  keywords        String?
+  competitorAnalysis String?
+  trendingScore   Float    @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  channel         YouTubeChannel @relation(fields: [channelId], references: [id])
+  channelId       String
+  @@map("content_strategies")
+}
