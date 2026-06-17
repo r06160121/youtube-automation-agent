@@ -1,14 +1,14 @@
-FROM node:20-alpine
+FROM oven/bun:latest
 
 WORKDIR /app
 
 COPY package.json package-lock.json* bun.lock* ./
-RUN npm install
+RUN bun install
 
 COPY . .
-RUN npx prisma generate
-RUN npm run build
+RUN bunx prisma generate
+RUN bun run build
 
 EXPOSE 3001
 
-CMD ["node", "server.tsx"]
+CMD ["bun", "run", "start"]

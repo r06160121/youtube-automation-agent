@@ -1,4 +1,9 @@
-aW1wb3J0IHsgdXNlU3RhdGUsIHVzZUVmZmVjdCB9IGZyb20gJ3JlYWN0JwoKdHlwZSBDaGFubmVsID0geyBpZDogc3RyaW5nOyBjaGFubmVsTmFtZTogc3RyaW5nOyBuaWNoZTogc3RyaW5nOyBwb3N0aW5nRnJlcXVlbmN5OiBzdHJpbmc7IGNyZWF0ZWRBdDogc3RyaW5nIH0KdHlwZSBWaWRlbyA9IHsgaWQ6IHN0cmluZzsgdGl0bGU6IHN0cmluZzsgc3RhdHVzOiBzdHJpbmc7IHZpZXdzOiBudW1iZXI7IGxpa2VzOiBudW1iZXI7IHNjaGVkdWxlZEF0OiBzdHJpbmcgfCB8IG51bGw7IGNoYW5uZWw6IHsgY2hhbm5lbE5hbWU6IHN0cmluZyB9IH0KdHlwZSBEYXNoYm9hcmQgPSB7IGNoYW5uZWxzOiBudW1iZXI7IHRvdGFsVmlkZW9zOiBudW1iZXI7IHB1Ymxpc2hlZFZpZGVvczogbnVtYmVyOyBzY2hlZHVsZWRWaWRlb3M6IG51bWJlcjsgcmVjZW50VmlkZW9zOiBWaWRlb1tdOyBwaXBlbGluZTogUmVjb3JkPHN0cmluZywgbnVtYmVyPiB9Cg==
+import { useState, useEffect } from 'react'
+
+type Channel = { id: string; channelName: string; niche: string; postingFrequency: string; createdAt: string }
+type Video = { id: string; title: string; status: string; views: number; likes: number; scheduledAt: string | null; channel: { channelName: string } }
+type Dashboard = { channels: number; totalVideos: number; publishedVideos: number; scheduledVideos: number; recentVideos: Video[]; pipeline: Record<string, number> }
+
 const STATUS_COLORS: Record<string, string> = {
   idea: 'bg-blue-100 text-blue-800', scripting: 'bg-purple-100 text-purple-800',
   thumbnail: 'bg-yellow-100 text-yellow-800', seo: 'bg-orange-100 text-orange-800',
@@ -180,9 +185,11 @@ export default function YouTubeDashboard() {
                       <td className="px-4 py-3 text-gray-500">{v.channel?.channelName}</td>
                       <td className="px-4 py-3"><span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[v.status] || 'bg-gray-100'}`}>{v.status}</span></td>
                       <td className="px-4 py-3 text-gray-500">{v.views.toLocaleString()}</td>
-                      <td className="px-4 py-3 text-right space-x-2">
-                        <button onClick={() => advanceStatus(v)} className="text-blue-600 hover:text-blue-800 text-xs font-medium">→ Advance</button>
-                        <button onClick={() => deleteVideo(v.id)} className="text-red-500 hover:text-red-700 text-xs">🗑️</button>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex gap-1 justify-end">
+                          {v.status !== 'published' && <button onClick={() => advanceStatus(v)} className="text-green-600 hover:text-green-800 text-xs px-2 py-1 rounded hover:bg-green-50">→ Advance</button>}
+                          <button onClick={() => deleteVideo(v.id)} className="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded hover:bg-red-50">🗑️</button>
+                        </div>
                       </td>
                     </tr>
                   ))}</tbody>
@@ -192,14 +199,9 @@ export default function YouTubeDashboard() {
           </div>
         )}
         {tab === 'settings' && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border space-y-6">
-            <h2 className="text-lg font-semibold">⚙️ Settings</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 bg-gray-50 rounded-lg"><h3 className="font-medium mb-2">🤖 AI Provider</h3><p className="text-sm text-gray-500">Configure your AI content generation provider (OpenAI, Gemini, Claude).</p></div>
-              <div className="p-4 bg-gray-50 rounded-lg"><h3 className="font-medium mb-2">📅 Posting Schedule</h3><p className="text-sm text-gray-500">Set up automatic posting schedule for your channels.</p></div>
-              <div className="p-4 bg-gray-50 rounded-lg"><h3 className="font-medium mb-2">🔍 SEO Optimization</h3><p className="text-sm text-gray-500">Configure automatic SEO optimization for video titles and descriptions.</p></div>
-              <div className="p-4 bg-gray-50 rounded-lg"><h3 className="font-medium mb-2">🎨 Thumbnail Generation</h3><p className="text-sm text-gray-500">Set up AI-powered thumbnail generation for your videos.</p></div>
-            </div>
+          <div className="bg-white rounded-xl p-6 shadow-sm border">
+            <h2 className="text-lg font-semibold mb-4">⚙️ Settings</h2>
+            <p className="text-gray-500">Settings panel coming soon. Configure AI providers, API keys, and automation rules here.</p>
           </div>
         )}
       </div>
