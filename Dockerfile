@@ -11,4 +11,4 @@ RUN bun run build
 
 EXPOSE 3001
 
-CMD ["bun", "run", "start"]
+CMD ["bun", "run", "server.tsx"]

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "node server.tsx",
+    "start": "bun run server.tsx",
     "generate": "npx @shogo-ai/sdk/bin/cli.mjs generate",
     "db:generate": "npx prisma generate",
     "db:push": "npx prisma db push"
@@ -16,6 +16,7 @@
     "@prisma/adapter-libsql": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "@shogo-ai/sdk": "^1.10.0",
+    "@hono/node-server": "^1.14.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "hono": "^4.0.0",
